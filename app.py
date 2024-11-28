@@ -82,7 +82,7 @@ def generate_frames():
 
         for (x, y, w, h) in faces:
             face = frame[y:y + h, x:x + w]
-            face_resized = cv2.resize(face, (256, 256))
+            face_resized = cv2.resize(face, (128, 128))
             face_resized = cv2.cvtColor(face_resized, cv2.COLOR_BGR2RGB)
             face_array = img_to_array(face_resized) / 255.0
             face_array = np.expand_dims(face_array, axis=0)
@@ -134,5 +134,5 @@ def check_attendance():
 
 # Run Flask App
 if __name__ == "__main__":
-    model = load_model_with_fix("modeldens.h5", "model_config.json")
+    model = load_model_with_fix("model1.h5", "model_config.json")
     app.run(debug=True)
