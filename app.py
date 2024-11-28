@@ -69,7 +69,7 @@ def generate_frames():
     global model
     conn, cursor = init_attendance_db()
     cap = cv2.VideoCapture(0)
-    class_names = ["Aavani", "Amaljith", "Bharath Dev", "Manikandan", "Nafl"]
+    class_names = ["Aavani", "Amaljith", "Bharath Dev", "Manikandan", "Nafl"]  # Adjust class names as per your model
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     while True:
@@ -134,5 +134,5 @@ def check_attendance():
 
 # Run Flask App
 if __name__ == "__main__":
-    model = load_model_with_fix("model1.h5", "model_config.json")
-    app.run(debug=True)
+    model = load_model_with_fix("model1.h5", "model_config.json")  # Ensure this model file and config are in place
+    app.run(debug=False)  # Use debug=False for production
