@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register with Camera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        nav a {
+            text-decoration: none;
+            margin: 0 1rem;
+            color: #dde0dd;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label, input, button {
+            margin: 0.5rem 0;
+        }
+        input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #camera-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        #video {
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        #canvas {
+            display: none;
+        }
+        #capture-btn {
+            margin-top: 1rem;
+        }
+        #preview {
+            margin-top: 1rem;
+            max-width: 400px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Register</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/mark_attendance">Mark Attendance</a>
+            <a href="/check_attendance">Check Attendance</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Register a New Person</h2>
+        <form action="/register" method="POST" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <div id="camera-container">
+                <video id="video" autoplay></video>
+                <canvas id="canvas"></canvas>
+                <button type="button" id="capture-btn">Capture Photo</button>
+                <img id="preview" src="" alt="Captured image preview">
+            </div>
+
+            <input type="hidden" id="image-data" name="image-data">
+            <button type="submit">Register</button>
+        </form>
+    </main>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture-btn');
+        const preview = document.getElementById('preview');
+        const imageDataInput = document.getElementById('image-data');
+
+        // Access the device camera and stream to the video element
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((err) => {
+                console.error('Error accessing the camera:', err);
+                alert('Unable to access the camera. Please check your device settings.');
+            });
+
+        // Capture a frame from the video stream
+        captureButton.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert the captured frame to a base64 string
+            const imageData = canvas.toDataURL('image/png');
+            preview.src = imageData;
+            preview.style.display = 'block';
+
+            // Store the image data in the hidden input
+            imageDataInput.value = imageData;
+        });
+    </script>
+</body>
+</html>
